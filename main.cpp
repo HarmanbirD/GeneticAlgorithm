@@ -6,7 +6,7 @@
 #include "tour.hpp"
 
 template<typename T>
-const T in_get (std::istream &in = std::cin, std::string prompt = " ") {
+const T in_get (std::istream &in = std::cin, const std::string & prompt = " ") {
     T x;
     std::cout << prompt;
     if (!(in >> x)) throw "Invalid input";
@@ -49,7 +49,7 @@ int main() {
     std::list<city> cities_to_visit;
     for (int i = 0; i < CITIES_IN_TOUR; ++i)
     {
-        int random_i = random_int(0, name_of_cities.size());
+        int random_i = random_int(0, (int) name_of_cities.size());
         city temp(name_of_cities[random_i], random_int(0, 1000), random_int(0, 1000));
         cities_to_visit.push_back(temp);
         name_of_cities.erase(name_of_cities.begin() + random_i);

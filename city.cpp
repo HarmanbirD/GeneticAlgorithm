@@ -33,7 +33,7 @@ city::get_y() const {
 }
 
 void
-city::print_city()
+city::print_city() const
 {
     std::cout << name << "[" << x << ", " << y << "]" << std::endl;
 }

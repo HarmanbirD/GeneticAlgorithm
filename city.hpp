@@ -12,16 +12,18 @@ constexpr int MAP_BOUNDARY_LOW  = 0;
 
 
 class city {
+
     private:
         std::string name;
-        int x;
-        int y;
+        int         x;
+        int         y;
 
     public:
         city();
         city(std::string name, int x, int y);
-        int get_x() const;
-        int get_y() const;
-        void print_city();
         ~city();
+
+        auto get_x() const      -> int;
+        auto get_y() const      -> int;
+        auto print_city() const -> void;
 };
