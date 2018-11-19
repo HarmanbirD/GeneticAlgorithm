@@ -23,7 +23,10 @@ class city {
         city(std::string name, int x, int y);
         ~city();
 
-        auto get_x() const      -> int;
-        auto get_y() const      -> int;
-        auto print_city() const -> void;
+        auto get_x() const                      -> int;
+        auto get_y() const                      -> int;
+        auto get_name() const                   -> std::string;
+        auto print_city() const                 -> void;
+        auto operator== (const city & m) const  -> bool;
+
 };

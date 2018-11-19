@@ -3,7 +3,7 @@
 #include <vector>
 #include <random>
 
-#include "tour.hpp"
+#include "population.hpp"
 
 template<typename T>
 const T in_get (std::istream &in = std::cin, const std::string & prompt = " ") {
@@ -55,16 +55,13 @@ int main() {
         name_of_cities.erase(name_of_cities.begin() + random_i);
     }
 
-    std::list<tour> population;
+    std::list<tour> population_list;
     for (int i = 0; i < POPULATION_SIZE; ++i)
     {
         tour temp(cities_to_visit);
-        population.push_back(temp);
-        temp.print_tour();
+        population_list.push_back(temp);
     }
 
-
-
-
+    population pop(population_list);
 
 }

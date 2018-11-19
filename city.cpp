@@ -23,19 +23,33 @@ city::city(std::string name, int x, int y)
 }
 
 int
-city::get_x() const {
+city::get_x() const
+{
     return x;
 }
 
 int
-city::get_y() const {
+city::get_y() const
+{
     return y;
+}
+
+std::string
+city::get_name() const
+{
+    return name;
 }
 
 void
 city::print_city() const
 {
     std::cout << name << "[" << x << ", " << y << "]" << std::endl;
+}
+
+bool
+city::operator==(const city & m) const
+{
+    return this->name == m.get_name() && this->x == m.get_x() && this->y == m.get_y();
 }
 
 city::~city() = default;

@@ -5,12 +5,18 @@
 #include "tour.hpp"
 
 tour::tour()
-: fitness_rating{0}, distance_travelled{0}
+:   number_of_cities{0},
+    fitness_rating{0},
+    distance_travelled{0}
 {}
 
 tour::tour(std::list<city> list_of_cities)
-: list_of_cities{std::move(list_of_cities)}, fitness_rating{0}, distance_travelled{0}
+:   list_of_cities{std::move(list_of_cities)},
+    number_of_cities{0},
+    fitness_rating{0},
+    distance_travelled{0}
 {
+    calculate_numb_of_cities();
     shuffle_cities();
     determine_fitness();
 }
@@ -28,6 +34,12 @@ tour::determine_fitness()
 {
     get_tour_distance();
     fitness_rating = 1.0 / distance_travelled * SCALAR;
+}
+
+void
+tour::calculate_numb_of_cities()
+{
+    number_of_cities = (int) list_of_cities.size();
 }
 
 double
@@ -74,7 +86,66 @@ tour::get_tour_distance()
         }
         city temp_two = *iterator;
 
-        double erer = get_distance_between_cities(temp, temp_two);
-        distance_travelled += erer;
+        distance_travelled += get_distance_between_cities(temp, temp_two);
     }
+}
+
+bool
+tour::operator<(const tour & m) const
+{
+    return !std::isgreaterequal(this->get_fitness(), m.get_fitness()) && !is_equal(*this, m);
+}
+
+bool
+tour::operator==(const tour & m) const
+{
+    return is_equal(*this, m);
+}
+
+bool
+is_equal(const tour &one, const tour &two)
+{
+    double difference = one.get_fitness() - two.get_fitness();
+    return std::abs(difference) < epsilon;
+}
+
+bool
+tour::contains_city(const city &m) const
+{
+    for (const city & i : list_of_cities)
+    {
+        if (i == m)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+tour &
+tour::operator=(tour m) {
+    swap(*this, m);
+    return *this;
+}
+
+int
+tour::get_numb_of_cities()
+{
+    return number_of_cities;
+}
+
+void
+swap(tour & first, tour & second)
+{
+    std::copy(second.list_of_cities.begin(), second.list_of_cities.end(), first.list_of_cities.begin());
+    std::swap(first.fitness_rating, second.fitness_rating);
+    std::swap(first.distance_travelled, second.distance_travelled);
+}
+
+std::vector<city>
+tour::get_cities_in_vector()
+{
+    std::vector<city> temp;
+    std::copy(list_of_cities.begin(), list_of_cities.end(), temp.begin());
+    return temp;
 }
