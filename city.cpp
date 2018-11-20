@@ -2,7 +2,6 @@
 // Created by Harmanbir Dhillon on 2018-11-12.
 //
 
-#include <iostream>
 #include "city.hpp"
 
 city::city()

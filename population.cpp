@@ -2,7 +2,6 @@
 // Created by Harmanbir Dhillon on 2018-11-17.
 //
 
-#include <array>
 #include "population.hpp"
 
 struct tour_comparator
