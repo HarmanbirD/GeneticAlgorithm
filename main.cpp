@@ -36,7 +36,7 @@ int main() {
     std::ifstream cities_file{"../cities.txt"};
     if(cities_file.is_open())
     {
-        while (cities_file >> name_of_city)
+        while (std::getline(cities_file, name_of_city))
         {
             name_of_cities.push_back(name_of_city);
         }
@@ -63,5 +63,8 @@ int main() {
     }
 
     population pop(population_list);
+
+    tour tm = pop.crossover_parents(population_list);
+    std::cout << tm;
 
 }

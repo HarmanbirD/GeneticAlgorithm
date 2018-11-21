@@ -30,7 +30,6 @@ class tour {
         auto get_tour_distance()                    -> void;
         auto determine_fitness()                    -> void;
         auto calculate_numb_of_cities()             -> void;
-        auto print_tour() const                     -> void;
         auto get_numb_of_cities()                   -> int;
         auto contains_city(const city & m) const    -> bool;
         auto operator< (const tour & m) const       -> bool;
@@ -41,4 +40,6 @@ class tour {
         auto get_distance_between_cities(const city & one, const city & two) -> double;
         friend auto is_equal(const tour & one, const tour & two)             -> bool;
         friend auto swap(tour & first, tour & second)                        -> void;
+        friend auto operator<< (std::ostream & os, const tour & t)           -> std::ostream &;
+
 };

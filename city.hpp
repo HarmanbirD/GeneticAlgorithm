@@ -22,12 +22,16 @@ class city {
     public:
         city();
         city(std::string name, int x, int y);
+        city(const city & other);
         ~city();
 
         auto get_x() const                      -> int;
         auto get_y() const                      -> int;
         auto get_name() const                   -> std::string;
-        auto print_city() const                 -> void;
         auto operator== (const city & m) const  -> bool;
+        auto operator= (city m)                 -> city &;
+        friend auto swap(city & first, city & second)            -> void;
+        friend auto operator<< (std::ostream & os, const city & c) -> std::ostream &;
+
 
 };

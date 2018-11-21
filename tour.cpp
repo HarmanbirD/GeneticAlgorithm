@@ -63,16 +63,6 @@ tour::get_fitness() const
 }
 
 void
-tour::print_tour() const
-{
-    for (const city & x : list_of_cities)
-    {
-        x.print_city();
-    }
-    std::cout << fitness_rating << "\n" << distance_travelled << "\n" << std::endl;
-}
-
-void
 tour::get_tour_distance()
 {
     std::list<city>::iterator iterator;
@@ -110,7 +100,7 @@ is_equal(const tour &one, const tour &two)
 }
 
 bool
-tour::contains_city(const city &m) const
+tour::contains_city(const city & m) const
 {
     for (const city & i : list_of_cities)
     {
@@ -145,7 +135,17 @@ swap(tour & first, tour & second)
 std::vector<city>
 tour::get_cities_in_vector()
 {
-    std::vector<city> temp;
-    std::copy(list_of_cities.begin(), list_of_cities.end(), temp.begin());
+    std::vector<city> temp(list_of_cities.begin(), list_of_cities.end());
     return temp;
+}
+
+std::ostream &
+operator<<(std::ostream & os, const tour & t)
+{
+    for (const city & x : t.list_of_cities)
+    {
+        std::cout << x;
+    }
+    os << t.fitness_rating << "\n" << t.distance_travelled << "\n" << std::endl;
+    return os;
 }
