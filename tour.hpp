@@ -27,7 +27,7 @@ class tour {
 
         auto add_city(const city & c)               -> void;
         auto shuffle_cities()                       -> void;
-        auto get_tour_distance()                    -> void;
+        auto calculate_tour_distance()              -> void;
         auto determine_fitness()                    -> void;
         auto calculate_numb_of_cities()             -> void;
         auto get_numb_of_cities()                   -> int;

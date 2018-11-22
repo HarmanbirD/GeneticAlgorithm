@@ -62,9 +62,9 @@ int main() {
         population_list.push_back(temp);
     }
 
-    population pop(population_list);
 
-    tour tm = pop.crossover_parents(population_list);
-    std::cout << tm;
+    population pop(population_list);
+//    std::cout << pop;
+
 
 }

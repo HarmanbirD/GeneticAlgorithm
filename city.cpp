@@ -56,7 +56,7 @@ city::operator=(city m) {
 }
 
 void
-swap(city &first, city &second)
+swap(city & first, city & second)
 {
     std::swap(first.name, second.name);
     std::swap(first.x, second.x);

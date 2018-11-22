@@ -32,7 +32,7 @@ tour::shuffle_cities()
 void
 tour::determine_fitness()
 {
-    get_tour_distance();
+    calculate_tour_distance();
     fitness_rating = 1.0 / distance_travelled * SCALAR;
 }
 
@@ -63,8 +63,9 @@ tour::get_fitness() const
 }
 
 void
-tour::get_tour_distance()
+tour::calculate_tour_distance()
 {
+    distance_travelled = 0;
     std::list<city>::iterator iterator;
     std::list<city>::iterator iterator_next;
     for (iterator = list_of_cities.begin(); iterator != list_of_cities.end();)

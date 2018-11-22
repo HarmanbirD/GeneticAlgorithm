@@ -21,11 +21,11 @@ class population {
         population();
         explicit population(std::list<tour> list_of_tours);
 
-        auto select_parents()                           -> void;
+        auto select_parents()                           -> std::list<tour>;
         auto evaluation()                               -> void;
         auto crossover()                                -> void;
         auto random_int(const int & x, const int & y)   -> int;
-        auto crossover_parents(std::list<tour> & list_of_tour_to_cross)   -> tour;
+        auto crossover_parents(std::list<tour> list_of_tour_to_cross)     -> tour;
         friend auto operator<< (std::ostream & os, const population & p)  -> std::ostream &;
 
 private:
