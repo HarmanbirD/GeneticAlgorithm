@@ -6,15 +6,15 @@
 #include "population.hpp"
 
 template<typename T>
-const T in_get (std::istream &in = std::cin, const std::string & prompt = " ") {
+const T get_const (std::istream &in = std::cin, const std::string & prompt = " ") {
     T x;
     std::cout << prompt;
     if (!(in >> x)) throw "Invalid input";
     return x;
 }
 
-const int CITIES_IN_TOUR  = in_get<int>(std::cin, "Enter the number of cities you would like to visit: ");
-const int POPULATION_SIZE = in_get<int>(std::cin, "Enter the number of candidate tours in the population: ");
+const int CITIES_IN_TOUR  = get_const<int>(std::cin, "Enter the number of cities you would like to visit: ");
+const int POPULATION_SIZE = get_const<int>(std::cin, "Enter the number of candidate tours in the population: ");
 
 int
 random_int(const int & x, const int & y)

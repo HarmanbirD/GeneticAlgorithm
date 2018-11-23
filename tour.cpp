@@ -1,3 +1,5 @@
+#include <random>
+
 //
 // Created by Harmanbir Dhillon on 2018-11-12.
 //
@@ -39,15 +41,15 @@ tour::determine_fitness()
 void
 tour::calculate_numb_of_cities()
 {
-    number_of_cities = (int) list_of_cities.size();
+    number_of_cities = static_cast<int>(list_of_cities.size());
 }
 
 double
-tour::get_distance_between_cities(const city & one, const city & two)
+tour::get_distance_between_cities(const city & one, const city & two) const
 {
-    double first_city  = one.get_x() + one.get_y();
-    double second_city = two.get_x() + two.get_y();
-    return abs(second_city - first_city);
+    double x_value = abs(one.get_x() - two.get_x());
+    double y_value = abs(one.get_y() + two.get_y());
+    return  sqrt(pow(x_value, 2) + pow(y_value, 2));
 }
 
 void
@@ -67,11 +69,10 @@ tour::calculate_tour_distance()
 {
     distance_travelled = 0;
     std::list<city>::iterator iterator;
-    std::list<city>::iterator iterator_next;
     for (iterator = list_of_cities.begin(); iterator != list_of_cities.end();)
     {
-        city temp = *iterator++;
-        if (iterator == list_of_cities.end())
+        city temp = *iterator;
+        if (++iterator == list_of_cities.end())
         {
             return;
         }
@@ -90,11 +91,12 @@ tour::operator<(const tour & m) const
 bool
 tour::operator==(const tour & m) const
 {
+
     return is_equal(*this, m);
 }
 
 bool
-is_equal(const tour &one, const tour &two)
+is_equal(const tour & one, const tour & two)
 {
     double difference = one.get_fitness() - two.get_fitness();
     return std::abs(difference) < epsilon;
@@ -113,6 +115,12 @@ tour::contains_city(const city & m) const
     return false;
 }
 
+double
+tour::get_distance_travelled() const
+{
+    return distance_travelled;
+}
+
 tour &
 tour::operator=(tour m) {
     swap(*this, m);
@@ -120,7 +128,7 @@ tour::operator=(tour m) {
 }
 
 int
-tour::get_numb_of_cities()
+tour::get_numb_of_cities() const
 {
     return number_of_cities;
 }
@@ -149,4 +157,28 @@ operator<<(std::ostream & os, const tour & t)
     }
     os << t.fitness_rating << "\n" << t.distance_travelled << "\n" << std::endl;
     return os;
+}
+
+void
+tour::swap_city()
+{
+    for (auto i = list_of_cities.begin(); i != list_of_cities.end();)
+    {
+        if (random_int(0, 100) < MUTATION_RATE)
+        {
+            city temp;
+            temp.swap(*i++, *i);
+        }
+        ++i;
+    }
+}
+
+int
+tour::random_int(const int & x, const int & y) const
+{
+    // return random int
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<int> uni(x,y);
+    return uni(rng);
 }
