@@ -30,7 +30,7 @@ class city {
         auto get_name() const                   -> std::string;
         auto operator== (const city & m) const  -> bool;
         auto operator= (city m)                 -> city &;
-        auto swap(city & first, city & second)  -> void;
+        static auto swap(city & first, city & second)  -> void;
         friend auto operator<< (std::ostream & os, const city & c) -> std::ostream &;
 
 

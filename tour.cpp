@@ -1,5 +1,7 @@
 #include <random>
 
+#include <random>
+
 //
 // Created by Harmanbir Dhillon on 2018-11-12.
 //
@@ -27,7 +29,7 @@ void
 tour::shuffle_cities()
 {
     std::vector<city> to_shuffle(list_of_cities.begin(), list_of_cities.end());
-    std::random_shuffle(to_shuffle.begin(), to_shuffle.end());
+    std::shuffle(to_shuffle.begin(), to_shuffle.end(), std::mt19937(std::random_device()()));
     std::copy(to_shuffle.begin(), to_shuffle.end(), list_of_cities.begin());
 }
 
@@ -160,16 +162,33 @@ operator<<(std::ostream & os, const tour & t)
 }
 
 void
-tour::swap_city()
+tour::swap_cities()
 {
-    for (auto i = list_of_cities.begin(); i != list_of_cities.end();)
+    if (list_of_cities.size() < 2)
+    {
+        return;
+    }
+
+    auto it_two = list_of_cities.begin();
+    auto it_one = it_two++;
+    auto it_end = list_of_cities.end();
+
+    for (;;)
     {
         if (random_int(0, 100) < MUTATION_RATE)
         {
-            city temp;
-            temp.swap(*i++, *i);
+            city::swap(*it_one, *it_two);
         }
-        ++i;
+
+        if (++it_one == it_end)
+        {
+            return;
+        }
+
+        if (++it_two == it_end)
+        {
+            it_two = list_of_cities.begin();
+        }
     }
 }
 

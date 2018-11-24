@@ -6,10 +6,14 @@
 #include "population.hpp"
 
 template<typename T>
-const T get_const (std::istream &in = std::cin, const std::string & prompt = " ") {
+const T get_const (std::istream &in = std::cin, const std::string & prompt = " ")
+{
     T x;
     std::cout << prompt;
-    if (!(in >> x)) throw "Invalid input";
+    if (!(in >> x))
+    {
+        throw "Invalid input";
+    }
     return x;
 }
 

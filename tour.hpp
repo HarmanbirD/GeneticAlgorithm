@@ -31,7 +31,7 @@ class tour {
         auto calculate_tour_distance()              -> void;
         auto determine_fitness()                    -> void;
         auto calculate_numb_of_cities()             -> void;
-        auto swap_city()                            -> void;
+        auto swap_cities()                          -> void;
         auto get_numb_of_cities() const             -> int;
         auto contains_city(const city & m) const    -> bool;
         auto operator< (const tour & m) const       -> bool;

@@ -4,12 +4,38 @@
 
 #include "population.hpp"
 
+const int population::NUMBER_OF_PARENTS = get_const<int>(std::cin, "Enter number of parents");
+const int population::NUMBER_OF_ELITES  = get_const<int>(std::cin, "Enter number of elites");
+
 template<typename T>
-const T population::get_const (std::istream & in, const std::string & prompt) {
+const T population::get_const(std::istream & in, const std::string & prompt)
+{
     T x;
     std::cout << prompt;
-    if (!(in >> x)) throw "Invalid input";
+    if (!(in >> x))
+    {
+        throw "Invalid input";
+    }
     return x;
+}
+
+template<typename T>
+void bubble_sort(T * arr, int x)
+{
+    bool exchanges;
+    do {
+        exchanges = false;  // assume no exchanges
+        for (int i=0; i<x-1; i++)
+        {
+            if (arr[i] > arr[i+1])
+            {
+                T temp = arr[i];
+                arr[i] = arr[i+1];
+                arr[i+1] = temp;
+                exchanges = true;  // after exchange, must look again
+            }
+        }
+    } while (exchanges);
 }
 
 struct tour_comparator
@@ -76,7 +102,14 @@ population::select_parents()
 //        {
 //            std::cout << x;
 //        }
-        list_of_tours_to_cross.push_back(parent_pool_tours.front());
+        if (contains_tour(list_of_tours_to_cross, parent_pool_tours.front()))
+        {
+            --i;
+        }
+        else
+        {
+            list_of_tours_to_cross.push_back(parent_pool_tours.front());
+        }
     }
 //
 //    std::cout<<"list of tour to cross" << std::endl;
@@ -123,14 +156,22 @@ population::crossover()
     }
 
     list_of_tours = crosses;
-    evaluation();
-    sort_tours();
+//    evaluation();
+//    std::cout << "\n\n\n\n" << std::endl;
 //    for (tour & x : list_of_tours)
 //    {
 //        double a = x.get_distance_travelled();
 //        std::cout << a << std::endl;
 //    }
-//    std::cout << "\n\n\n\n" << std::endl;
+    mutation();
+    evaluation();
+    sort_tours();
+    std::cout << "\n\n\n\n" << std::endl;
+    for (tour & x : list_of_tours)
+    {
+        double a = x.get_distance_travelled();
+        std::cout << a << std::endl;
+    }
 }
 
 tour
@@ -140,7 +181,7 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
     tour mixed_tour;
 
     // array of random indices to populate the mixed_tour
-    std::array<int, NUMBER_OF_PARENTS + 1> random_numbers {};
+    int * random_numbers = new int[NUMBER_OF_PARENTS + 1];
 
     // counts the current index in random_numbers
     int count = 0;
@@ -153,18 +194,36 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
     // random numbers to fill random indices used to populate tours
     for (int i = 1; i < NUMBER_OF_PARENTS; ++i)
     {
-        random_numbers[i] = random_int(0, numb_of_cities);
+        random_numbers[i] = random_int(0, numb_of_cities - 1);
 //        std::cout << "random number [" << i << "]: " << random_numbers[i] << std::endl;
     }
     // last index is always the max index
     random_numbers[NUMBER_OF_PARENTS] = numb_of_cities - 1;
+//
+//    std::cout << "1" << std::endl;
+//    for (int i = 0; i < NUMBER_OF_PARENTS + 1; ++i)
+//    {
+//        std::cout << random_numbers[i];
+//    }
+//    std::cout << std::endl;
 
     // sort numbers so the indices are in ascending order
-    std::sort(random_numbers.begin(), random_numbers.end());
+    bubble_sort<int>(random_numbers, NUMBER_OF_PARENTS);
+//    std::cout << "sort" << std::endl;
+//    for (int i = 0; i < NUMBER_OF_PARENTS + 1; ++i)
+//    {
+//        std::cout << random_numbers[i];
+//    }
+//    std::cout << std::endl;
+//
+//    std::cout << "test :(" << (count ? random_numbers[count] + 1 : random_numbers[count]);
 
     // iterates through every tour in the parent tours
     for (tour & x : list_of_tour_to_cross)
     {
+//        std::cout << count << std::endl;
+//        std::cout << "curr tour\n " << x << std::endl;
+
         // vector containing all cities in the current parent tour
         std::vector<city> temp = x.get_cities_in_vector();
 
@@ -176,7 +235,9 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
         for (int i = count ? random_numbers[count] + 1 : random_numbers[count];
              i != random_numbers[count + 1] + 1 && i < numb_of_cities; ++i)
         {
+//            std::cout << "i " << i << std::endl;
             int index_of_next_city = i;
+//            std::cout << index_of_next_city << std::endl;
             // finds the next index of city that is not in tour
             while (mixed_tour.contains_city(temp[index_of_next_city]))
             {
@@ -185,6 +246,7 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
                     index_of_next_city = 0;
                 }
             }
+//            std::cout << "Added city: " << temp[index_of_next_city] << std::endl;
             mixed_tour.add_city(temp[index_of_next_city]);
         }
         ++count;
@@ -193,6 +255,8 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
 //    std::cout << "MIXED TOUR" << std::endl;
 //    mixed_tour.determine_fitness();
 //    std::cout << mixed_tour;
+
+    delete[] random_numbers;
 
     return mixed_tour;
 }
@@ -203,7 +267,7 @@ population::run_crossover()
     std::cout << "Before crossover" << std::endl;
     for (tour & x : list_of_tours)
     {
-        std::cout << x;
+        std::cout << x.get_distance_travelled() << "\n";
     }
 //    std::cout << list_of_tours.front();
     for (int i = 0; i < ITERATION; ++i)
@@ -213,14 +277,14 @@ population::run_crossover()
     std::cout << "After crossover" << "\n\n\n\n\n\n\n" << std::endl;
     for (tour & x : list_of_tours)
     {
-        std::cout << x;
+        std::cout << x.get_distance_travelled() << "\n";
     }
 //    std::cout << list_of_tours.front();
 
 }
 
 int
-population::random_int(const int & x, const int & y)
+population::random_int(const int & x, const int & y) const
 {
     // return random int
     std::random_device rd;
@@ -248,9 +312,9 @@ operator<<(std::ostream &os, const population & p)
 }
 
 bool
-population::contains_tour(const tour & other)
+population::contains_tour(const std::list<tour> & list_tour, const tour & other) const
 {
-    for (tour & x : list_of_tours)
+    for (const tour & x : list_tour)
     {
         if (x == other)
         {
@@ -262,22 +326,18 @@ population::contains_tour(const tour & other)
 
 void population::mutation()
 {
-    auto iterator = list_of_tours.begin();
+    int count = 0;
 
-    for (int i = 0; i < NUMBER_OF_ELITES; ++i)
+    for (tour & x : list_of_tours)
     {
-        if (++iterator == list_of_tours.end())
+        if (count < NUMBER_OF_ELITES)
         {
-            return;
+            ++count;
         }
-    }
-
-    for (int i = 0; i < static_cast<int>(list_of_tours.size() - NUMBER_OF_ELITES); ++i)
-    {
-        int mutation_percent = random_int(0, 100);
-        if (mutation_percent < MUTATION_RATE)
+        else
         {
-
+            x.swap_cities();
         }
     }
 }
+
