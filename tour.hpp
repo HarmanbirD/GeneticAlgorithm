@@ -13,7 +13,6 @@
 
 constexpr double SCALAR{1000.45};
 constexpr double epsilon{0.00000001};
-constexpr int    MUTATION_RATE{15};
 
 class tour {
     private:

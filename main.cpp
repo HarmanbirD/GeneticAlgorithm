@@ -4,21 +4,10 @@
 #include <random>
 
 #include "population.hpp"
+#include "templates.hpp"
 
-template<typename T>
-const T get_const (std::istream &in = std::cin, const std::string & prompt = " ")
-{
-    T x;
-    std::cout << prompt;
-    if (!(in >> x))
-    {
-        throw "Invalid input";
-    }
-    return x;
-}
-
-const int CITIES_IN_TOUR  = get_const<int>(std::cin, "Enter the number of cities you would like to visit: ");
-const int POPULATION_SIZE = get_const<int>(std::cin, "Enter the number of candidate tours in the population: ");
+const int CITIES_IN_TOUR  = templates::get_const<int>(std::cin, "Enter the number of cities you would like to visit: ");
+const int POPULATION_SIZE = templates::get_const<int>(std::cin, "Enter the number of candidate tours in the population: ");
 
 int main() {
 
@@ -49,6 +38,7 @@ int main() {
         name_of_cities.erase(name_of_cities.begin() + random_i);
     }
 
+    // list of tours in population
     std::list<tour> population_list;
     for (int i = 0; i < POPULATION_SIZE; ++i)
     {
@@ -56,9 +46,5 @@ int main() {
         population_list.push_back(temp);
     }
 
-
     population pop(population_list);
-//    std::cout << pop;
-
-
 }

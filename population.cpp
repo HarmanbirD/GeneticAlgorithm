@@ -3,41 +3,10 @@
 //
 
 #include "population.hpp"
+#include "templates.hpp"
 
-const int population::NUMBER_OF_PARENTS = get_const<int>(std::cin, "Enter number of parents: ");
-const int population::NUMBER_OF_ELITES  = get_const<int>(std::cin, "Enter number of elites: ");
-
-template<typename T>
-const T population::get_const(std::istream & in, const std::string & prompt)
-{
-    T x;
-    std::cout << prompt;
-    if (!(in >> x))
-    {
-        throw "Invalid input";
-    }
-    return x;
-}
-
-template<typename T>
-void bubble_sort(T * arr, int x)
-{
-    bool exchanges;
-
-    do {
-        exchanges = false;  // assume no exchanges
-        for (int i=0; i<x-1; i++)
-        {
-            if (arr[i] > arr[i+1])
-            {
-                T temp = arr[i];
-                arr[i] = arr[i+1];
-                arr[i+1] = temp;
-                exchanges = true;  // after exchange, must look again
-            }
-        }
-    } while (exchanges);
-}
+const int population::NUMBER_OF_PARENTS = templates::get_const<int>(std::cin, "Enter number of parents: ");
+const int population::NUMBER_OF_ELITES  = templates::get_const<int>(std::cin, "Enter number of elites: ");
 
 struct tour_comparator
 {
@@ -142,8 +111,9 @@ population::crossover()
     mutation();
     evaluation();
     sort_tours();
-    std::cout << "\n\n\n\n" << std::endl;
-    std::cout << list_of_tours.front().get_distance_travelled() << std::endl;
+
+    std::cout << std::flush;
+    std::cout << "\rCurrent best tour distance: " << list_of_tours.front().get_distance_travelled();
 }
 
 tour
@@ -172,7 +142,7 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
     random_numbers[NUMBER_OF_PARENTS] = numb_of_cities - 1;
 
     // sort numbers so the indices are in ascending order
-    bubble_sort<int>(random_numbers, NUMBER_OF_PARENTS);
+    templates::bubble_sort<int>(random_numbers, NUMBER_OF_PARENTS);
 
     // iterates through every tour in the parent tours
     for (tour & x : list_of_tour_to_cross)
@@ -217,17 +187,17 @@ population::run_crossover()
 
     int count = 0;
 
-    while (list_of_tours.front().get_distance_travelled() / base_distance > IMPROVEMENT_FACTOR && count < ITERATION)
+//    while (list_of_tours.front().get_distance_travelled() / base_distance > IMPROVEMENT_FACTOR)
+    while (count < ITERATION)
     {
         crossover();
-        std::cout << ++count << std::endl;
+        std::cout << " current Iteration: " << ++count;
+        std::cout << " current improvement: " << (list_of_tours.front().get_distance_travelled() / base_distance * 100) << "%";
     }
 
     std::cout << "\n\n\n\n\n\n\nAfter crossover" << std::endl;
     std::cout << list_of_tours.front() << std::endl;
     std::cout << "improved by: " << (list_of_tours.front().get_distance_travelled() / base_distance * 100) << "% after " << count << " iterations." << std::endl;
-
-
 }
 
 void

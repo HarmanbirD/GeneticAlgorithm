@@ -12,7 +12,7 @@
 constexpr int    SHUFFLE{64};
 constexpr int    ITERATION{1500};
 constexpr int    PARENT_POOL_SIZE{5};
-constexpr double IMPROVEMENT_FACTOR{0.4};
+constexpr double IMPROVEMENT_FACTOR{0.45};
 
 class population {
     public:
@@ -29,7 +29,6 @@ class population {
         auto contains_tour(const std::list<tour> & list_tour, const tour & other) const    -> bool;
         auto crossover_parents(std::list<tour> list_of_tour_to_cross)     -> tour;
         friend auto operator<< (std::ostream & os, const population & p)  -> std::ostream &;
-        template<typename T> static const T get_const(std::istream & in  = std::cin, const std::string & prompt = " ");
 
         static const int    NUMBER_OF_PARENTS;
         static const int    NUMBER_OF_ELITES;

@@ -7,6 +7,10 @@
 //
 
 #include "tour.hpp"
+#include "population.hpp"
+#include "templates.hpp"
+
+const int MUTATION_RATE = templates::get_const<int>(std::cin, "Enter the mutation rate: ");
 
 tour::tour()
 :   number_of_cities{0},
@@ -165,7 +169,7 @@ operator<<(std::ostream & os, const tour & t)
     {
         std::cout << x;
     }
-    os << t.fitness_rating << "\n" << t.distance_travelled << "\n" << std::endl;
+    os << "Fitness Rating: " << t.fitness_rating << "\nDistance travelled by Salesman" << t.distance_travelled << "\n" << std::endl;
     return os;
 }
 

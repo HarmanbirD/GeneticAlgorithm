@@ -4,6 +4,7 @@
 
 #include <random>
 #include "city.hpp"
+#include "templates.hpp"
 
 city::city()
 : name{"Vancouver"}, x{0}, y{0}
