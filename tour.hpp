@@ -10,6 +10,10 @@
 #include <random>
 #include <iostream>
 #include <algorithm>
+#include <random>
+#include <random>
+#include <iomanip>
+
 
 constexpr double SCALAR{1000.45};
 constexpr double epsilon{0.00000001};
@@ -35,12 +39,12 @@ class tour {
         auto contains_city(const city & m) const                                    -> bool;
         auto operator< (const tour & m) const                                       -> bool;
         auto operator== (const tour & m) const                                      -> bool;
+        auto is_equal(const tour & one, const tour & two) const                     -> bool;
         auto get_fitness() const                                                    -> double;
         auto get_distance_travelled() const                                         -> double;
         auto get_distance_between_cities(const city & one, const city & two) const  -> double;
         auto operator= (tour m)                                                     -> tour &;
         auto get_cities_in_vector() const                                           -> std::vector<city>;
-        friend auto is_equal(const tour & one, const tour & two) const              -> bool;
         friend auto swap(tour & first, tour & second)                               -> void;
         friend auto operator<< (std::ostream & os, const tour & t)                  -> std::ostream &;
 

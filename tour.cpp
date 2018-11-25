@@ -1,14 +1,8 @@
-#include <random>
-
-#include <random>
-#include <iomanip>
-
 //
 // Created by Harmanbir Dhillon on 2018-11-12.
 //
 
 #include "tour.hpp"
-#include "population.hpp"
 #include "templates.hpp"
 
 const int MUTATION_RATE = templates::get_const<int>(std::cin, "Enter the mutation rate(If you want a 15% mutation rate, enter 15): ");
@@ -21,11 +15,10 @@ tour::tour()
 
 tour::tour(std::list<city> list_of_cities)
 :   list_of_cities{std::move(list_of_cities)},
-    number_of_cities{0},
+    number_of_cities{static_cast<int>(list_of_cities.size())},
     fitness_rating{0},
     distance_travelled{0}
 {
-    calculate_numb_of_cities();
     shuffle_tour();
     determine_fitness();
 }
@@ -75,8 +68,7 @@ void
 tour::calculate_tour_distance()
 {
     distance_travelled = 0;
-    std::list<city>::iterator iterator;
-    for (iterator = list_of_cities.begin(); iterator != list_of_cities.end();)
+    for (auto iterator = list_of_cities.begin(); iterator != list_of_cities.end();)
     {
         city temp = *iterator;
         if (++iterator == list_of_cities.end())
@@ -111,7 +103,7 @@ tour::operator==(const tour & m) const
 }
 
 bool
-is_equal(const tour & one, const tour & two) const
+tour::is_equal(const tour & one, const tour & two) const
 {
     double difference = one.get_fitness() - two.get_fitness();
     return std::abs(difference) < epsilon;
