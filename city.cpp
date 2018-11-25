@@ -2,7 +2,6 @@
 // Created by Harmanbir Dhillon on 2018-11-12.
 //
 
-#include <random>
 #include "city.hpp"
 #include "templates.hpp"
 
@@ -24,10 +23,8 @@ city::city(std::string name, int x, int y)
 }
 
 city::city(std::string name)
-: name{std::move(name)}
-{
-    populate_coords();
-}
+: name{std::move(name)}, x{random_int(MAP_BOUNDARY_LOW, MAP_BOUNDARY_HIGH)}, y{random_int(MAP_BOUNDARY_LOW, MAP_BOUNDARY_HIGH)}
+{}
 
 city::city(const city & other)
 : name{other.name}, x{other.x}, y{other.y}
@@ -49,13 +46,6 @@ std::string
 city::get_name() const
 {
     return name;
-}
-
-void
-city::populate_coords()
-{
-    x = random_int(MAP_BOUNDARY_LOW, MAP_BOUNDARY_HIGH);
-    y = random_int(MAP_BOUNDARY_LOW, MAP_BOUNDARY_HIGH);
 }
 
 bool
@@ -81,7 +71,10 @@ city::swap(city & first, city & second)
 std::ostream &
 operator<<(std::ostream & os, const city &c)
 {
-    os << c.name << "[" << c.x << ", " << c.y << "]" << std::endl;;
+    std::ostringstream temp;
+    temp << c.name << " [" << std::setw(4) << c.x << ", " << std::setw(4) << c.y << "]";
+    std::string temp_string = temp.str();
+    os  << std::right <<  std::setw(55) << temp_string << std::endl;
     return os;
 }
 

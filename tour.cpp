@@ -1,6 +1,7 @@
 #include <random>
 
 #include <random>
+#include <iomanip>
 
 //
 // Created by Harmanbir Dhillon on 2018-11-12.
@@ -10,7 +11,7 @@
 #include "population.hpp"
 #include "templates.hpp"
 
-const int MUTATION_RATE = templates::get_const<int>(std::cin, "Enter the mutation rate: ");
+const int MUTATION_RATE = templates::get_const<int>(std::cin, "Enter the mutation rate(If you want a 15% mutation rate, enter 15): ");
 
 tour::tour()
 :   number_of_cities{0},
@@ -25,12 +26,12 @@ tour::tour(std::list<city> list_of_cities)
     distance_travelled{0}
 {
     calculate_numb_of_cities();
-    shuffle_cities();
+    shuffle_tour();
     determine_fitness();
 }
 
 void
-tour::shuffle_cities()
+tour::shuffle_tour()
 {
     std::vector<city> to_shuffle(list_of_cities.begin(), list_of_cities.end());
     std::shuffle(to_shuffle.begin(), to_shuffle.end(), std::mt19937(std::random_device()()));
@@ -110,7 +111,7 @@ tour::operator==(const tour & m) const
 }
 
 bool
-is_equal(const tour & one, const tour & two)
+is_equal(const tour & one, const tour & two) const
 {
     double difference = one.get_fitness() - two.get_fitness();
     return std::abs(difference) < epsilon;
@@ -156,7 +157,7 @@ swap(tour & first, tour & second)
 }
 
 std::vector<city>
-tour::get_cities_in_vector()
+tour::get_cities_in_vector() const
 {
     std::vector<city> temp(list_of_cities.begin(), list_of_cities.end());
     return temp;
@@ -169,7 +170,16 @@ operator<<(std::ostream & os, const tour & t)
     {
         std::cout << x;
     }
-    os << "Fitness Rating: " << t.fitness_rating << "\nDistance travelled by Salesman" << t.distance_travelled << "\n" << std::endl;
+
+    os << "\n";
+    os << std::left  << std::setw(30) << "Fitness Rating: ";
+    os << std::fixed << std::setprecision(4);
+    os << std::right << std::setw(25) << t.fitness_rating;
+    os << std::left  << std::setw(30) << "\nDistance travelled: ";
+    os << std::fixed << std::setprecision(4);
+    os << std::right << std::setw(26) << t.distance_travelled;
+    os << "\n";
+    os << std::endl;
     return os;
 }
 

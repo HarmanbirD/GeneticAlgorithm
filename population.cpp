@@ -2,11 +2,13 @@
 // Created by Harmanbir Dhillon on 2018-11-17.
 //
 
+#include <iomanip>
 #include "population.hpp"
 #include "templates.hpp"
 
 const int population::NUMBER_OF_PARENTS = templates::get_const<int>(std::cin, "Enter number of parents: ");
 const int population::NUMBER_OF_ELITES  = templates::get_const<int>(std::cin, "Enter number of elites: ");
+const int population::ITERATION         = templates::get_const<int>(std::cin, "Enter the number of iterations: ");
 
 struct tour_comparator
 {
@@ -123,7 +125,7 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
     tour mixed_tour;
 
     // array of random indices to populate the mixed_tour
-    int * random_numbers = new int[NUMBER_OF_PARENTS + 1];
+    auto * random_numbers = new int[NUMBER_OF_PARENTS + 1];
 
     // counts the current index in random_numbers
     int count = 0;
@@ -182,7 +184,7 @@ void
 population::run_crossover()
 {
     base_distance = list_of_tours.front().get_distance_travelled();
-    std::cout << "Before crossover" << std::endl;
+    std::cout << "Best tour before crossover: \n\n" << std::endl;
     std::cout << list_of_tours.front();
 
     int count = 0;
@@ -192,20 +194,13 @@ population::run_crossover()
     {
         crossover();
         std::cout << " current Iteration: " << ++count;
-        std::cout << " current improvement: " << (list_of_tours.front().get_distance_travelled() / base_distance * 100) << "%";
+        std::cout << " current Improvement: " << std::fixed << std::setprecision(2) << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "%";
     }
 
-    std::cout << "\n\n\n\n\n\n\nAfter crossover" << std::endl;
+    std::cout << std::flush;
+    std::cout << "\r\nBest tour after crossover: \n\n" << std::endl;
     std::cout << list_of_tours.front() << std::endl;
-    std::cout << "improved by: " << (list_of_tours.front().get_distance_travelled() / base_distance * 100) << "% after " << count << " iterations." << std::endl;
-}
-
-void
-population::shuffle_population()
-{
-    std::vector<tour> temp(list_of_tours.begin(), list_of_tours.end());
-    std::random_shuffle(temp.begin(), temp.end());
-    std::copy(temp.begin(), temp.end(), list_of_tours.begin());
+    std::cout << "Improved by: " << std::fixed << std::setprecision(2) << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "% after " << count << " iterations." << std::endl;
 }
 
 std::ostream &
