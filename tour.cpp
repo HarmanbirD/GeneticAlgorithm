@@ -50,7 +50,7 @@ double
 tour::get_distance_between_cities(const city & one, const city & two) const
 {
     double x_value = abs(one.get_x() - two.get_x());
-    double y_value = abs(one.get_y() + two.get_y());
+    double y_value = abs(one.get_y() - two.get_y());
     return  sqrt(pow(x_value, 2) + pow(y_value, 2));
 }
 
@@ -93,6 +93,14 @@ tour::operator<(const tour & m) const
 bool
 tour::operator==(const tour & m) const
 {
+    auto i = m.list_of_cities.begin();
+    for (const city & c : list_of_cities)
+    {
+        if (c != *i++)
+        {
+            return false;
+        }
+    }
 
     return is_equal(*this, m);
 }
@@ -175,7 +183,7 @@ tour::swap_cities()
 
     for (;;)
     {
-        if (random_int(0, 100) < MUTATION_RATE)
+        if (city::random_int(0, 100) < MUTATION_RATE)
         {
             city::swap(*it_one, *it_two);
         }
@@ -190,14 +198,4 @@ tour::swap_cities()
             it_two = list_of_cities.begin();
         }
     }
-}
-
-int
-tour::random_int(const int & x, const int & y) const
-{
-    // return random int
-    std::random_device rd;
-    std::mt19937 rng(rd());
-    std::uniform_int_distribution<int> uni(x,y);
-    return uni(rng);
 }

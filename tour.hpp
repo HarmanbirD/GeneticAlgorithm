@@ -40,7 +40,6 @@ class tour {
         auto get_distance_travelled() const         -> double;
         auto operator= (tour m)                     -> tour &;
         auto get_cities_in_vector()                 -> std::vector<city>;
-        auto random_int(const int & x, const int & y) const                         -> int;
         auto get_distance_between_cities(const city & one, const city & two) const  -> double;
         friend auto is_equal(const tour & one, const tour & two)                    -> bool;
         friend auto swap(tour & first, tour & second)                               -> void;

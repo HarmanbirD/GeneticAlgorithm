@@ -2,6 +2,7 @@
 // Created by Harmanbir Dhillon on 2018-11-12.
 //
 
+#include <random>
 #include "city.hpp"
 
 city::city()
@@ -19,6 +20,12 @@ city::city(std::string name, int x, int y)
     {
         throw std::invalid_argument("Y coordinate must be greater than 0 and less than 1000");
     }
+}
+
+city::city(std::string name)
+: name{std::move(name)}
+{
+    populate_coords();
 }
 
 city::city(const city & other)
@@ -41,6 +48,13 @@ std::string
 city::get_name() const
 {
     return name;
+}
+
+void
+city::populate_coords()
+{
+    x = random_int(MAP_BOUNDARY_LOW, MAP_BOUNDARY_HIGH);
+    y = random_int(MAP_BOUNDARY_LOW, MAP_BOUNDARY_HIGH);
 }
 
 bool
@@ -68,6 +82,20 @@ operator<<(std::ostream & os, const city &c)
 {
     os << c.name << "[" << c.x << ", " << c.y << "]" << std::endl;;
     return os;
+}
+
+auto city::operator!=(const city &m) const -> bool {
+    return !operator==(m);
+}
+
+int
+city::random_int(const int & x, const int & y)
+{
+    // return random int
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<int> uni(x,y);
+    return uni(rng);
 }
 
 city::~city() = default;

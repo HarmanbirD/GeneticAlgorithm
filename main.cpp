@@ -20,16 +20,6 @@ const T get_const (std::istream &in = std::cin, const std::string & prompt = " "
 const int CITIES_IN_TOUR  = get_const<int>(std::cin, "Enter the number of cities you would like to visit: ");
 const int POPULATION_SIZE = get_const<int>(std::cin, "Enter the number of candidate tours in the population: ");
 
-int
-random_int(const int & x, const int & y)
-{
-    // return random int
-    std::random_device rd;
-    std::mt19937 rng(rd());
-    std::uniform_int_distribution<int> uni(x,y);
-    return uni(rng);
-}
-
 int main() {
 
     // vector containing names of cities
@@ -53,8 +43,8 @@ int main() {
     std::list<city> cities_to_visit;
     for (int i = 0; i < CITIES_IN_TOUR; ++i)
     {
-        int random_i = random_int(0, (int) name_of_cities.size());
-        city temp(name_of_cities[random_i], random_int(0, 1000), random_int(0, 1000));
+        int random_i = city::random_int(0, (int) name_of_cities.size());
+        city temp(name_of_cities[random_i]);
         cities_to_visit.push_back(temp);
         name_of_cities.erase(name_of_cities.begin() + random_i);
     }

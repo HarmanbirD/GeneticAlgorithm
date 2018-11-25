@@ -10,8 +10,9 @@
 #include "tour.hpp"
 
 constexpr int    SHUFFLE{64};
-constexpr int    ITERATION{1000};
+constexpr int    ITERATION{1500};
 constexpr int    PARENT_POOL_SIZE{5};
+constexpr double IMPROVEMENT_FACTOR{0.4};
 
 class population {
     public:
@@ -25,7 +26,6 @@ class population {
         auto shuffle_population()                       -> void;
         auto mutation()                                 -> void;
         auto run_crossover()                            -> void;
-        auto random_int(const int & x, const int & y) const   -> int;
         auto contains_tour(const std::list<tour> & list_tour, const tour & other) const    -> bool;
         auto crossover_parents(std::list<tour> list_of_tour_to_cross)     -> tour;
         friend auto operator<< (std::ostream & os, const population & p)  -> std::ostream &;
@@ -34,7 +34,7 @@ class population {
         static const int    NUMBER_OF_PARENTS;
         static const int    NUMBER_OF_ELITES;
 
-private:
+    private:
             std::list<tour> list_of_tours;
             double          base_distance;
 
