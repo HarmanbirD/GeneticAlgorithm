@@ -15,10 +15,11 @@
 #include <iomanip>
 
 
-constexpr double SCALAR{1000.45};
+constexpr double SCALAR{5000.45};
 constexpr double epsilon{0.00000001};
 
 class tour {
+
     private:
         std::list<city> list_of_cities;
         int             number_of_cities;
@@ -28,6 +29,7 @@ class tour {
     public:
         tour();
         explicit tour(std::list<city> list_of_cities);
+        ~tour() = default;
 
         auto get_numb_of_cities() const                                             -> int;
         auto add_city(const city & c)                                               -> void;
@@ -35,7 +37,7 @@ class tour {
         auto calculate_tour_distance()                                              -> void;
         auto determine_fitness()                                                    -> void;
         auto calculate_numb_of_cities()                                             -> void;
-        auto swap_cities()                                                          -> void;
+        auto mutate_tour()                                                          -> void;
         auto contains_city(const city & m) const                                    -> bool;
         auto operator< (const tour & m) const                                       -> bool;
         auto operator== (const tour & m) const                                      -> bool;

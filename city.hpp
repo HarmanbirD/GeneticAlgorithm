@@ -27,7 +27,7 @@ class city {
         explicit city(std::string name);
         city(std::string name, int x, int y);
         city(const city & other);
-        ~city();
+        ~city() = default;
 
         auto get_x() const                                          -> int;
         auto get_y() const                                          -> int;

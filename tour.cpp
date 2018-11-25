@@ -7,12 +7,14 @@
 
 const int MUTATION_RATE = templates::get_const<int>(std::cin, "Enter the mutation rate(If you want a 15% mutation rate, enter 15): ");
 
+// default constructor
 tour::tour()
 :   number_of_cities{0},
     fitness_rating{0},
     distance_travelled{0}
 {}
 
+// constructor that takes a list of cities
 tour::tour(std::list<city> list_of_cities)
 :   list_of_cities{std::move(list_of_cities)},
     number_of_cities{0},
@@ -24,6 +26,7 @@ tour::tour(std::list<city> list_of_cities)
     determine_fitness();
 }
 
+// shuffles all cities passed in
 void
 tour::shuffle_tour()
 {
@@ -32,6 +35,7 @@ tour::shuffle_tour()
     std::copy(to_shuffle.begin(), to_shuffle.end(), list_of_cities.begin());
 }
 
+// determines the fitness by calculating the distance travelled and inversing that and timing it by a SCALAR
 void
 tour::determine_fitness()
 {
@@ -39,12 +43,14 @@ tour::determine_fitness()
     fitness_rating = 1.0 / distance_travelled * SCALAR;
 }
 
+// calculates the number of cities in tour
 void
 tour::calculate_numb_of_cities()
 {
     number_of_cities = static_cast<int>(list_of_cities.size());
 }
 
+// returns the distance between city one and city two
 double
 tour::get_distance_between_cities(const city & one, const city & two) const
 {
@@ -53,18 +59,21 @@ tour::get_distance_between_cities(const city & one, const city & two) const
     return  sqrt(pow(x_value, 2) + pow(y_value, 2));
 }
 
+// adds a city to the tour
 void
 tour::add_city(const city & c)
 {
     list_of_cities.push_back(c);
 }
 
+// returns fitness
 double
 tour::get_fitness() const
 {
     return fitness_rating;
 }
 
+// calculates the distance travelled in the tour
 void
 tour::calculate_tour_distance()
 {
@@ -82,12 +91,14 @@ tour::calculate_tour_distance()
     }
 }
 
+// overloaded less than operator
 bool
 tour::operator<(const tour & m) const
 {
     return !std::isgreaterequal(this->get_fitness(), m.get_fitness()) && !is_equal(*this, m);
 }
 
+// overloaded equals operator
 bool
 tour::operator==(const tour & m) const
 {
@@ -103,6 +114,7 @@ tour::operator==(const tour & m) const
     return is_equal(*this, m);
 }
 
+// compares the fitness of two tours
 bool
 tour::is_equal(const tour & one, const tour & two) const
 {
@@ -110,6 +122,7 @@ tour::is_equal(const tour & one, const tour & two) const
     return std::abs(difference) < epsilon;
 }
 
+// returns true if the tour contains the city passed in
 bool
 tour::contains_city(const city & m) const
 {
@@ -123,24 +136,28 @@ tour::contains_city(const city & m) const
     return false;
 }
 
+// returns distance travelled
 double
 tour::get_distance_travelled() const
 {
     return distance_travelled;
 }
 
+// overloaded assignment operator
 tour &
 tour::operator=(tour m) {
     swap(*this, m);
     return *this;
 }
 
+// returns number of cities
 int
 tour::get_numb_of_cities() const
 {
     return number_of_cities;
 }
 
+// swaps the first and second tour
 void
 swap(tour & first, tour & second)
 {
@@ -149,6 +166,7 @@ swap(tour & first, tour & second)
     std::swap(first.distance_travelled, second.distance_travelled);
 }
 
+// returns all cities in the tour in vector format
 std::vector<city>
 tour::get_cities_in_vector()
 {
@@ -156,6 +174,7 @@ tour::get_cities_in_vector()
     return temp;
 }
 
+// overloaded output operator
 std::ostream &
 operator<<(std::ostream & os, const tour & t)
 {
@@ -176,8 +195,9 @@ operator<<(std::ostream & os, const tour & t)
     return os;
 }
 
+// mutates the tour
 void
-tour::swap_cities()
+tour::mutate_tour()
 {
     if (list_of_cities.size() < 2)
     {

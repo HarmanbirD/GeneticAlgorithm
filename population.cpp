@@ -195,7 +195,7 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
 void
 population::run_crossover()
 {
-    std::cout << "Best tour before crossover: \n\n" << std::endl;
+    std::cout << "\nBest tour before crossover: \n" << std::endl;
     std::cout << list_of_tours.front();
 
     int count = 0;
@@ -211,9 +211,9 @@ population::run_crossover()
         std::cout << std::fixed << std::setprecision(2) << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "%";
     }
 
-    std::cout << "\nBest tour after crossover: \n\n" << std::endl;
-    std::cout << list_of_tours.front() << std::endl;
-    std::cout << "improved by: " << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "% after " << count << " iterations." << std::endl;
+    std::cout << "\n\n\nBest tour after crossover: \n";
+    std::cout << list_of_tours.front();
+    std::cout << "improved by: " << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "% after " << count << " iterations.";
 }
 
 std::ostream &
@@ -251,7 +251,7 @@ void population::mutation()
         }
         else
         {
-            x.swap_cities();
+            x.mutate_tour();
         }
     }
 }
