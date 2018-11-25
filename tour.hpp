@@ -44,7 +44,7 @@ class tour {
         auto get_distance_travelled() const                                         -> double;
         auto get_distance_between_cities(const city & one, const city & two) const  -> double;
         auto operator= (tour m)                                                     -> tour &;
-        auto get_cities_in_vector() const                                           -> std::vector<city>;
+        auto get_cities_in_vector()                                                 -> std::vector<city>;
         friend auto swap(tour & first, tour & second)                               -> void;
         friend auto operator<< (std::ostream & os, const tour & t)                  -> std::ostream &;
 

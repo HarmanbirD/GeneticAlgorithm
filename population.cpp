@@ -2,7 +2,6 @@
 // Created by Harmanbir Dhillon on 2018-11-17.
 //
 
-#include <iomanip>
 #include "population.hpp"
 #include "templates.hpp"
 
@@ -24,33 +23,42 @@ population::population(std::list<tour> list_of_tours)
 : list_of_tours{std::move(list_of_tours)}
 {
     sort_tours();
+    base_distance = this->list_of_tours.front().get_distance_travelled();
     run_crossover();
 }
 
 std::list<tour>
 population::select_parents()
 {
+    // list of parent tours
     std::list<tour> list_of_tours_to_cross;
 
+    // runs BUMBER_OF_PARENTS times
     for (int i = 0; i < NUMBER_OF_PARENTS; ++i)
     {
+        // array that contains the random indices used to populate the parent pool
         std::array<int, PARENT_POOL_SIZE> random_indices {};
-
         for (int j = 0; j < PARENT_POOL_SIZE; ++j)
         {
             random_indices[j] = city::random_int(0, static_cast<int>(list_of_tours.size() - 1));
         }
 
+        // sort the random indices
         std::sort(random_indices.begin(), random_indices.end());
 
         auto tour_iterator = list_of_tours.begin();
 
+        // list containing the tours in the parent pool
         std::list<tour> parent_pool_tours;
 
         int count = 0;
 
+        // runs for every index in the random_indices
         for (const int & j : random_indices)
         {
+            // while count != the index from the random_indices,
+            // count is increased until it == to the index from random_indices
+            // that tour is then added to the parent pool
             while (count != j)
             {
                 if (++tour_iterator == list_of_tours.end())
@@ -61,8 +69,12 @@ population::select_parents()
             }
             parent_pool_tours.push_back(*tour_iterator);
         }
+        // parent pool is sorted so the fittest tour is moved to the front of the list
         parent_pool_tours.sort(tour_comparator());
 
+        // if the tour is already in the parent tours, another parent tour is chosen
+        // decrementing i means that the for loop that runs NUMBER_OF_PARENT times
+        // runs again to select another parent
         if (contains_tour(list_of_tours_to_cross, parent_pool_tours.front()))
         {
             --i;
@@ -94,8 +106,11 @@ population::evaluation()
 void
 population::crossover()
 {
+    // temp list of tours created by crossing over parent tours
+    // also contains the ELITE tours
     std::list<tour> crosses;
 
+    // adds ELITE tours to temp list of tours
     auto iterator_for_elite_tour = list_of_tours.begin();
     for (int i = 0; i < NUMBER_OF_ELITES; ++i)
     {
@@ -113,9 +128,6 @@ population::crossover()
     mutation();
     evaluation();
     sort_tours();
-
-    std::cout << std::flush;
-    std::cout << "\rCurrent best tour distance: " << list_of_tours.front().get_distance_travelled();
 }
 
 tour
@@ -125,7 +137,7 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
     tour mixed_tour;
 
     // array of random indices to populate the mixed_tour
-    auto * random_numbers = new int[NUMBER_OF_PARENTS + 1];
+    int * random_numbers = new int[NUMBER_OF_PARENTS + 1];
 
     // counts the current index in random_numbers
     int count = 0;
@@ -183,7 +195,6 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
 void
 population::run_crossover()
 {
-    base_distance = list_of_tours.front().get_distance_travelled();
     std::cout << "Best tour before crossover: \n\n" << std::endl;
     std::cout << list_of_tours.front();
 
@@ -193,14 +204,16 @@ population::run_crossover()
     while (count < ITERATION)
     {
         crossover();
-        std::cout << " current Iteration: " << ++count;
-        std::cout << " current Improvement: " << std::fixed << std::setprecision(2) << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "%";
+        std::cout << std::flush;
+        std::cout << std::right << std::setw(20) << "\rCurrent best tour distance: " << list_of_tours.front().get_distance_travelled();
+        std::cout << std::right << std::setw(35) << " current Iteration: " << ++count;
+        std::cout << std::right << std::setw(35) << " current improvement: ";
+        std::cout << std::fixed << std::setprecision(2) << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "%";
     }
 
-    std::cout << std::flush;
-    std::cout << "\r\nBest tour after crossover: \n\n" << std::endl;
+    std::cout << "\nBest tour after crossover: \n\n" << std::endl;
     std::cout << list_of_tours.front() << std::endl;
-    std::cout << "Improved by: " << std::fixed << std::setprecision(2) << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "% after " << count << " iterations." << std::endl;
+    std::cout << "improved by: " << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "% after " << count << " iterations." << std::endl;
 }
 
 std::ostream &

@@ -15,10 +15,11 @@ tour::tour()
 
 tour::tour(std::list<city> list_of_cities)
 :   list_of_cities{std::move(list_of_cities)},
-    number_of_cities{static_cast<int>(list_of_cities.size())},
+    number_of_cities{0},
     fitness_rating{0},
     distance_travelled{0}
 {
+    calculate_numb_of_cities();
     shuffle_tour();
     determine_fitness();
 }
@@ -149,7 +150,7 @@ swap(tour & first, tour & second)
 }
 
 std::vector<city>
-tour::get_cities_in_vector() const
+tour::get_cities_in_vector()
 {
     std::vector<city> temp(list_of_cities.begin(), list_of_cities.end());
     return temp;
