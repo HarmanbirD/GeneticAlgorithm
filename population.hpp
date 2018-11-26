@@ -11,7 +11,7 @@
 #include "tour.hpp"
 
 constexpr int    SHUFFLE{64};
-constexpr int    PARENT_POOL_SIZE{5};
+constexpr int    PARENT_POOL_SIZE{8};
 constexpr double IMPROVEMENT_FACTOR{0.45};
 
 class population {
@@ -25,6 +25,7 @@ class population {
         auto sort_tours()                                                                   -> void;
         auto mutation()                                                                     -> void;
         auto run_crossover()                                                                -> void;
+        auto add_tour(const tour & t)                                                       -> void;
         auto crossover_parents(std::list<tour> list_of_tour_to_cross)                       -> tour;
         friend auto operator<< (std::ostream & os, const population & p)                    -> std::ostream &;
         auto contains_tour(const std::list<tour> & list_tour, const tour & other) const     -> bool;

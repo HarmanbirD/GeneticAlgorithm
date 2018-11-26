@@ -17,8 +17,10 @@ struct tour_comparator
     }
 };
 
+// default constructor
 population::population() = default;
 
+// constructor that takes a list of tours
 population::population(std::list<tour> list_of_tours)
 : list_of_tours{std::move(list_of_tours)}
 {
@@ -27,13 +29,14 @@ population::population(std::list<tour> list_of_tours)
     run_crossover();
 }
 
+// selects NUMBER_OF_PARENT tours
 std::list<tour>
 population::select_parents()
 {
     // list of parent tours
     std::list<tour> list_of_tours_to_cross;
 
-    // runs BUMBER_OF_PARENTS times
+    // runs NUMBER_OF_PARENTS times
     for (int i = 0; i < NUMBER_OF_PARENTS; ++i)
     {
         // array that contains the random indices used to populate the parent pool
@@ -88,12 +91,14 @@ population::select_parents()
     return list_of_tours_to_cross;
 }
 
+// sorts the list_of_tours list
 void
 population::sort_tours()
 {
     list_of_tours.sort(tour_comparator());
 }
 
+// determines the fitness of all tours
 void
 population::evaluation()
 {
@@ -103,6 +108,7 @@ population::evaluation()
     }
 }
 
+// replaces non-elite tours
 void
 population::crossover()
 {
@@ -130,6 +136,7 @@ population::crossover()
     sort_tours();
 }
 
+// crosses NUMBER_OF_PARENT tours
 tour
 population::crossover_parents(std::list<tour> list_of_tour_to_cross)
 {
@@ -192,6 +199,7 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
     return mixed_tour;
 }
 
+// runs crossover ITERATION times
 void
 population::run_crossover()
 {
@@ -206,16 +214,26 @@ population::run_crossover()
         crossover();
         std::cout << std::flush;
         std::cout << std::right << std::setw(20) << "\rCurrent best tour distance: " << list_of_tours.front().get_distance_travelled();
-        std::cout << std::right << std::setw(35) << " current Iteration: " << ++count;
-        std::cout << std::right << std::setw(35) << " current improvement: ";
+        std::cout << std::right << std::setw(35) << " Current Iteration: " << ++count;
+        std::cout << std::right << std::setw(35) << " Current Improvement: ";
         std::cout << std::fixed << std::setprecision(2) << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "%";
     }
 
     std::cout << "\n\n\nBest tour after crossover: \n";
     std::cout << list_of_tours.front();
-    std::cout << "improved by: " << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "% after " << count << " iterations.";
+    std::cout << "Improved by: " << std::fixed << std::setprecision(2);
+    std::cout << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100);
+    std::cout << "% after " << count << " iterations.";
 }
 
+// adds a tour to the population
+void
+population::add_tour(const tour & t)
+{
+    list_of_tours.push_back(t);
+}
+
+// overloaded output operator
 std::ostream &
 operator<<(std::ostream &os, const population & p)
 {
@@ -226,6 +244,7 @@ operator<<(std::ostream &os, const population & p)
     return os;
 }
 
+// returns true if the list of tours contains the given tour
 bool
 population::contains_tour(const std::list<tour> & list_tour, const tour & other) const
 {
@@ -239,6 +258,7 @@ population::contains_tour(const std::list<tour> & list_tour, const tour & other)
     return false;
 }
 
+// mutates all tours
 void population::mutation()
 {
     int count = 0;
