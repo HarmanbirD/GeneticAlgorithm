@@ -2,6 +2,8 @@
 #include <fstream>
 #include <vector>
 #include <random>
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
 
 #include "population.hpp"
 #include "templates.hpp"
@@ -9,8 +11,7 @@
 const int CITIES_IN_TOUR  = templates::get_const<int>(std::cin, "Enter the number of cities you would like to visit: ");
 const int POPULATION_SIZE = templates::get_const<int>(std::cin, "Enter the number of candidate tours in the population: ");
 
-int main() {
-
+int main(int argc, char **argv) {
     // vector containing names of cities
     std::vector<std::string> name_of_cities;
     std::string name_of_city;

@@ -8,6 +8,9 @@
 #include <array>
 #include <list>
 #include <iomanip>
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
+
 #include "tour.hpp"
 
 constexpr int    SHUFFLE{64};
@@ -26,9 +29,11 @@ class population {
         auto mutation()                                                                     -> void;
         auto run_crossover()                                                                -> void;
         auto add_tour(const tour & t)                                                       -> void;
+        auto get_coords(tour to_draw)                                                       -> void;
         auto crossover_parents(std::list<tour> list_of_tour_to_cross)                       -> tour;
         friend auto operator<< (std::ostream & os, const population & p)                    -> std::ostream &;
         auto contains_tour(const std::list<tour> & list_tour, const tour & other) const     -> bool;
+        auto draw_map(const float & x1, const float & y1, const float & x2, const float & y2, const ALLEGRO_COLOR & color, const float & thickness) -> void;
 
 
         static const int    NUMBER_OF_PARENTS;

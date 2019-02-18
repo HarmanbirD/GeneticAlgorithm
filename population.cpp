@@ -24,6 +24,19 @@ population::population() = default;
 population::population(std::list<tour> list_of_tours)
 : list_of_tours{std::move(list_of_tours)}
 {
+    ALLEGRO_DISPLAY * display = NULL;
+
+    if (!al_init())
+    {
+        fprintf(stderr, "Failed to initialize allegro\n");
+    }
+
+    display = al_create_display(500, 500);
+
+    if(!display) {
+        fprintf(stderr, "failed to create display!\n");
+    }
+
     sort_tours();
     base_distance = this->list_of_tours.front().get_distance_travelled();
     run_crossover();
@@ -203,10 +216,12 @@ population::crossover_parents(std::list<tour> list_of_tour_to_cross)
 void
 population::run_crossover()
 {
-    std::cout << "\nBest tour before crossover: \n" << std::endl;
-    std::cout << list_of_tours.front();
+    auto t_start = std::chrono::high_resolution_clock::now();
+//    std::cout << "\nBest tour before crossover: \n" << std::endl;
+//    std::cout << list_of_tours.front();
 
     int count = 0;
+    double current_best_tour_distance = list_of_tours.front().get_distance_travelled();
 
 //    while (list_of_tours.front().get_distance_travelled() / base_distance > IMPROVEMENT_FACTOR)
     while (count < ITERATION)
@@ -217,13 +232,26 @@ population::run_crossover()
         std::cout << std::right << std::setw(35) << " Current Iteration: " << ++count;
         std::cout << std::right << std::setw(35) << " Current Improvement: ";
         std::cout << std::fixed << std::setprecision(2) << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100) << "%";
+        if (current_best_tour_distance > list_of_tours.front().get_distance_travelled())
+        {
+            al_clear_to_color(al_map_rgb(250, 250, 250));
+            get_coords(list_of_tours.front());
+            al_flip_display();
+        }
+        current_best_tour_distance = list_of_tours.front().get_distance_travelled();
     }
+
 
     std::cout << "\n\n\nBest tour after crossover: \n";
     std::cout << list_of_tours.front();
-    std::cout << "Improved by: " << std::fixed << std::setprecision(2);
+    std::cout << "\n\nImproved by: " << std::fixed << std::setprecision(2);
     std::cout << (100 - list_of_tours.front().get_distance_travelled() / base_distance * 100);
-    std::cout << "% after " << count << " iterations.";
+    std::cout << "% after " << count << " iterations." << std::endl;
+    auto t_end = std::chrono::high_resolution_clock::now();
+    std::cout << "\nPARENT POOL SIZE: " << PARENT_POOL_SIZE << std::endl;
+    std::cout << "Time: " << std::chrono::duration<double, std::milli>(t_end-t_start).count() / 1000 << " seconds" << std::endl;
+
+    al_rest(50.0);
 }
 
 // adds a tour to the population
@@ -259,7 +287,8 @@ population::contains_tour(const std::list<tour> & list_tour, const tour & other)
 }
 
 // mutates all tours
-void population::mutation()
+void
+population::mutation()
 {
     int count = 0;
 
@@ -276,3 +305,25 @@ void population::mutation()
     }
 }
 
+void
+population::get_coords(tour to_draw)
+{
+    auto cities_vector = to_draw.get_cities_in_vector();
+    for (auto i = 0; i != cities_vector.size()-1;)
+    {
+        int x1 = cities_vector[i].get_x();
+        int y1 = cities_vector[i].get_y();
+        int x2 = cities_vector[++i].get_x();
+        int y2 = cities_vector[i].get_y();
+        draw_map(x1,y1,x2,y2,al_map_rgb(0,0,0),2);
+    }
+
+    al_draw_circle(cities_vector.back().get_x()/2,cities_vector.back().get_y()/2,2,al_map_rgb(0,0,0), 3);
+}
+
+void
+population::draw_map(const float & x1, const float & y1, const float & x2, const float & y2, const ALLEGRO_COLOR & color, const float &thickness)
+{
+    al_draw_line(x1/2,y1/2,x2/2,y2/2,color,thickness);
+    al_draw_circle(x1/2,y1/2,2,color,3);
+}
